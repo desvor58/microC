@@ -15,6 +15,14 @@ public:
     Args() {}
     void create(int argc, char **argv)
     {
+        if (argv[1] == "-h" || argv[1] == "-help") {
+            std::cout << "-i (or first argument)  sourse file .mc" << std::endl;
+            std::cout << "-o  output file name (.exe)" << std::endl;
+            std::cout << "-cstp  stoppet compilation on C code" << std::endl;
+            std::cout << "-CC  set C compiler" << std::endl;
+            std::cout << "-CCa  set C compiler arguments ( always last argument!!! )" << std::endl;
+            std::cout << "-cfn  set C file name (default: a.c)" << std::endl;
+        }
         for (int i = 0; i < argc; i++) {
             if (strcmp(argv[i], "-i") == 0) {
                 infile_name = argv[++i];

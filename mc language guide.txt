@@ -1,3 +1,21 @@
+COMPILER MCC:
+    For correct work mcc required C/C++ compiler!
+
+    Arguments:
+        -i (or first argument)  sourse file .mc
+        -o  output file name (.exe)
+        -cstp  stoppet compilation on C code
+        -CC  set C compiler
+        -CCa  set C compiler arguments ( always last argument!!! )
+        -cfn  set C file name (default: a.c)
+
+    Example:
+        mcc -i test.mc -o test.exe -CC clang -CCa -Wall
+        mcc test.mc -cstp
+
+    How build:
+        clang++ src/mcc.cpp -o mcc.exe
+
 MACROSES:
     '~' - start of marcos, after expected name of macros as one simbol
     '!' - end of macros
