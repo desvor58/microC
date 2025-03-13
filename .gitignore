@@ -1,0 +1,5 @@
+.vscode/
+*.exe
+*.c
+test.mc
+test2.mc

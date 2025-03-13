@@ -1,0 +1,96 @@
+MACROSES:
+    '~' - start of marcos, after expected name of macros as one simbol
+    '!' - end of macros
+
+    Semantic:
+        ~<macros name><argument>!
+        or
+        ~<macros name><pre-arg>:<main-arg>!
+
+    Types:
+        ~m      main function
+                    int main(int argc, char **argv)\n{\n
+                    }\n
+        ~I      C preprocessing include  (cant work for .mc files, only C/CPP files (see macro ~@))
+                    #include <
+                    >\n
+        ~r      return
+                    return
+                    ;\n
+        ~p      printf_s
+                    printf_s(
+                    );\n
+        ~n      not
+                    !(
+                    )
+        ~w      while loop
+                    while (
+                    ) {\n
+                    }\n
+        ~S      switch from C
+                    switch (
+                    ) {\n
+                    }\n
+        ~c      case for switch
+                    case
+                    :\n
+        ~b      break  (declarate without '!' (~b) )
+                    break;
+        ~i      condition. if() from C
+                    if (
+                    ) {\n
+                    }\n
+        ~s      C structure (see 1.). After '~s' you can declarate typedeffed name in parants (see 2.);
+                1.  struct
+                    \n{\n
+                    };\n
+                2.  typedef struct
+                    \n{\n
+                    } <typedeffed name>;
+
+        ~@      include .mc file in current (For Example: ~@includeded_file_name.mc!)
+
+
+    Example:
+        ~iiostream!
+
+        ~           macros start
+        i           macros name
+        iostream    marcos argument
+        !           macros end
+
+VARIABLES:
+    Semantic:
+        <type><name><value>;
+        or
+        <type>*<name><value>;
+        or
+        <type><name>[<size>]<value>;
+
+        types:
+            8  - char   (-127 - 127)
+            16 - short  (-32 768 - 32 767)
+            32 - int    (-2 147 483 648 - 2 147 483 647)
+
+            pointers declaration with '*' simbol after type
+            arrays declaration with '[]' after name
+        
+        name is a arbitrary alpha simbols and '_' (for exaple: var, a, b, some_var)
+
+    Example:
+        8a5;                         char a = 5;
+        32test_var12;                int test_var = 12;
+        32*pointer&test_var;         int* pointer = &test_var;
+        32**dp&pointer;              int** dp = &pointer;
+        8*test_str"Hello, world!";   char* test_str = "Hello, world!";
+        8arr[10];                    char arr[10];
+        8mat[3][3];                  char mat[3][3];
+        16_arr[64]4,1,7;             short _arr[64] = { 4, 1, 7 };
+        8*_p_arr[100];               char* _p_arr[100];
+
+FUNCTIONS:
+    Semantic:
+        <type><name>(<arg1>,<arg2>...) {
+            <body>
+        }
+
