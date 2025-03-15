@@ -19,8 +19,11 @@ struct macro_info
     std::pair<std::string, std::string> val;
 };
 
-std::vector<macro_info> curr_macroses {};
-std::vector<std::string> custom_types {};
+std::vector<std::pair<macro_info, analis_info>>  curr_macroses  {};
+std::vector<std::string>                         custom_types   {};
+
+u16 line  = 1;
+u16 chpos = 0;
 
 void macroses_exec();
 
@@ -29,9 +32,12 @@ void macroses_exec();
         res_text += ftext[pointer++];    \
     }                                    \
 
+#define std_anls_inf {args.infile_name, line, chpos}
+
 int main(int argc, char ** argv)
 {
     args.create(argc, argv);
+    targs = args;
 
     std::ifstream file(args.infile_name);
     if (file.is_open()) {
@@ -49,6 +55,11 @@ int main(int argc, char ** argv)
     std::string full_digit;
 
     while (pointer < ftext.size()) {
+        chpos++;
+        if (ftext[pointer] == '\n') {
+            line++;
+            chpos = 0;
+        }
         if (ftext[pointer] == '/') {
             while (ftext[++pointer] != '/');
             pointer++;
@@ -67,9 +78,9 @@ int main(int argc, char ** argv)
         }
         if (ftext[pointer] == '!') {
             if (!curr_macroses.empty()) {
-                res_text += lastel(curr_macroses).val.second;
-                if (lastel(curr_macroses).name == "s") {
-                    res_text += lastel(curr_macroses).val.first;
+                res_text += lastel(curr_macroses).first.val.second;
+                if (lastel(curr_macroses).first.name == "s") {
+                    res_text += lastel(curr_macroses).first.val.first;
                     res_text += ";\n";
                 }
                 curr_macroses.pop_back();
@@ -79,6 +90,15 @@ int main(int argc, char ** argv)
             res_text += ftext[pointer];
             res_text += '\n';
         }
+        if (ftext[pointer] == '#') {
+            res_text += "#define ";
+            pointer++;
+            uncond_write(' ')
+            res_text += ' ';
+            pointer++;
+            continue;
+        }
+
         if (isalpha(ftext[pointer])) {
     alpha_parse:
             while (isalpha(ftext[pointer]) || ftext[pointer] == '_') {
@@ -211,6 +231,14 @@ int main(int argc, char ** argv)
         }
         pointer++;
     }
+    if (!curr_macroses.empty()) {
+        err(
+            "Expected '!' for close macross ~" + lastel(curr_macroses).first.name,
+            {args.infile_name, line, chpos},
+            lastel(curr_macroses).second,
+            ftext
+        );
+    }
 
     std::ofstream ofile(args.Cfile_name);
     if (ofile.is_open()) {
@@ -232,7 +260,10 @@ void macroses_exec()
 {
     // main function
     if (ftext[pointer] == 'm') {
-        curr_macroses.push_back({"m", macroses["m"]});
+        curr_macroses.push_back(std::pair<macro_info, analis_info>(
+            {"m", macroses["m"]},
+            std_anls_inf
+        ));
         res_text += macroses["m"].first;
     } else
     // include
@@ -290,7 +321,10 @@ void macroses_exec()
         uncond_write(':');
         res_text += ") {\n";
 
-        curr_macroses.push_back({"w", std::pair<std::string, std::string>("", "}\n")});
+        curr_macroses.push_back(std::pair<macro_info, analis_info>(
+            {"w", std::pair<std::string, std::string>("", "}\n")},
+            std_anls_inf
+        ));
     } else
     // switch
     // "switch ("  ") {\n"  "}\n"
@@ -299,7 +333,10 @@ void macroses_exec()
         pointer++;
         uncond_write(':')
         res_text += ") {\n";
-        curr_macroses.push_back({"S", std::pair<std::string, std::string>("", "}\n")});
+        curr_macroses.push_back(std::pair<macro_info, analis_info>(
+            {"S", std::pair<std::string, std::string>("", "}\n")},
+            std_anls_inf
+        ));
     } else
     // case
     if (ftext[pointer] == 'c') {
@@ -317,7 +354,10 @@ void macroses_exec()
         pointer++;
         uncond_write(':');
         res_text += ") {\n";
-        curr_macroses.push_back({"i", std::pair<std::string, std::string>("", "}\n")});
+        curr_macroses.push_back(std::pair<macro_info, analis_info>(
+            {"i", std::pair<std::string, std::string>("", "}\n")},
+            std_anls_inf
+        ));
     } else
     // structs
     if (ftext[pointer] == 's') {
@@ -346,7 +386,10 @@ void macroses_exec()
             typedeffed_name = tname;
         }
         res_text += "\n{\n";
-        curr_macroses.push_back({"s", std::pair<std::string, std::string>(typedeffed_name, "}")});
+        curr_macroses.push_back(std::pair<macro_info, analis_info>(
+            {"s", std::pair<std::string, std::string>(typedeffed_name, "}")},
+            std_anls_inf
+        ));
         custom_types.push_back(tname);
     } else
     if (ftext[pointer] == '@') {

@@ -8,6 +8,7 @@ COMPILER MCC:
         -CC  set C compiler
         -CCa  set C compiler arguments ( always last argument!!! )
         -cfn  set C file name (default: a.c)
+        -noref  dont put reference to errors
 
     Example:
         mcc -i test.mc -o test.exe -CC clang -CCa -Wall
@@ -112,3 +113,16 @@ FUNCTIONS:
             <body>
         }
 
+DEFINES:
+    Semantic:
+        #<name> <value>
+
+    Warning:
+        if you use define in body MCC expected ';'
+    
+    Example:
+        #testDef ~p"Hello"!
+        ~m
+          testDef  /ERROR!/
+          testDef; /no error/
+        !

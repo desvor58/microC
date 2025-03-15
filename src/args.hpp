@@ -11,11 +11,12 @@ public:
     std::string Ccomp = "g++";
     std::string CCargs = "";
     bool        Cstop = false;
+    bool        noref = false;
 
     Args() {}
     void create(int argc, char **argv)
     {
-        if (argv[1] == "-h" || argv[1] == "-help") {
+        if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "-help") == 0) {
             std::cout << "-i (or first argument)  sourse file .mc" << std::endl;
             std::cout << "-o  output file name (.exe)" << std::endl;
             std::cout << "-cstp  stoppet compilation on C code" << std::endl;
@@ -30,6 +31,10 @@ public:
             }
             if (strcmp(argv[i], "-o") == 0) {
                 outfile_name = argv[++i];
+                continue;
+            }
+            if (strcmp(argv[i], "-noref") == 0) {
+                noref = true;
                 continue;
             }
             if (strcmp(argv[i], "-cfn") == 0) {
