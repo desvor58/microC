@@ -87,9 +87,13 @@ VARIABLES:
         <type><name>[<size>]<value>;
 
         types:
-            8  - char   (-127 - 127)
-            16 - short  (-32 768 - 32 767)
-            32 - int    (-2 147 483 648 - 2 147 483 647)
+            0  - void
+            7  - char
+            8  - unsigned char
+            15 - short
+            16 - unsigned short
+            31 - int
+            32 - unsigned int
 
             pointers declaration with '*' simbol after type
             arrays declaration with '[]' after name

@@ -12,6 +12,7 @@ typedef unsigned int    u32;
 #define lastel(X) X[X.size()-1]
 
 std::map<std::string, std::string> types = {
+    {"0",  "void"},
     {"7",  "char"},
     {"15", "short"},
     {"31", "int"},
