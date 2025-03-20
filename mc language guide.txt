@@ -97,6 +97,7 @@ VARIABLES:
 
             pointers declaration with '*' simbol after type
             arrays declaration with '[]' after name
+            statics variables declarate with '@' before type
         
         name is a arbitrary alpha simbols and '_' (for exaple: var, a, b, some_var)
 

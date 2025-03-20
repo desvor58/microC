@@ -132,6 +132,11 @@ int main(int argc, char ** argv)
             res_text += '*';
             goto alpha_parse;
         }
+
+        if (ftext[pointer] == '@') {
+            res_text += "static ";
+            pointer++;
+        }
         if (isdigit(ftext[pointer])) {
             full_digit = "";
             for (;isdigit(ftext[pointer]); pointer++) {
