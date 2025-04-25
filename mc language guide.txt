@@ -67,6 +67,11 @@ MACROSES:
                     \n{\n
                     } <typedeffed name>;
 
+        ~e      C enum
+                    enum
+                    {\n
+                    };\n
+
         ~@      include .mc file in current (For Example: ~@includeded_file_name.mc!)
 
 
