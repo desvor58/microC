@@ -22,6 +22,8 @@ struct macro_info
 std::vector<std::pair<macro_info, analis_info>>  curr_macroses  {};
 std::vector<std::string>                         custom_types   {};
 
+std::vector<std::string> incl_files = {};
+
 u16 line  = 1;
 u16 chpos = 0;
 
@@ -56,6 +58,10 @@ int main(int argc, char ** argv)
 
     while (pointer < ftext.size()) {
         chpos++;
+        if (ftext[pointer] == '`') {
+            res_text += '!';
+            continue;
+        }
         if (ftext[pointer] == '\n') {
             line++;
             chpos = 0;
@@ -89,14 +95,6 @@ int main(int argc, char ** argv)
         if (ftext[pointer] == '{' || ftext[pointer] == '}') {
             res_text += ftext[pointer];
             res_text += '\n';
-        }
-        if (ftext[pointer] == '#') {
-            res_text += "#define ";
-            pointer++;
-            uncond_write(' ')
-            res_text += ' ';
-            pointer++;
-            continue;
         }
 
         if (isalpha(ftext[pointer])) {
@@ -133,10 +131,6 @@ int main(int argc, char ** argv)
             goto alpha_parse;
         }
 
-        if (ftext[pointer] == '@') {
-            res_text += "static ";
-            pointer++;
-        }
         if (isdigit(ftext[pointer])) {
             full_digit = "";
             for (;isdigit(ftext[pointer]); pointer++) {
@@ -292,14 +286,6 @@ void macroses_exec()
 
         res_text += macroses["r"].second;
     } else
-    if (ftext[pointer] == 'n') {
-        res_text += macroses["n"].first;
-
-        pointer++;
-        uncond_write('!')
-
-        res_text += macroses["r"].second;
-    } else
     // printf_s
     if (ftext[pointer] == 'p') {
         res_text += macroses["p"].first;
@@ -403,13 +389,26 @@ void macroses_exec()
         while (ftext[pointer] != '!') {
             name += ftext[pointer++];
         }
-        std::ifstream file(name);
+        if (std::count(incl_files.begin(), incl_files.end(), name) > 0) {
+            return;
+        }
+        std::ifstream file(get_file_path(args.infile_name) + '/' + name);
         int offset = 0;
         char c;
         while (file.get(c)) {
             ftext.insert(ftext.begin() + pointer + offset++, c);
         }
+        incl_files.push_back(name);
         return;
+    } else
+    if (ftext[pointer] == 'e') {
+        res_text += "enum ";
+        pointer++;
+        uncond_write(':');
+        res_text += "{\n";
+        pointer++;
+        uncond_write('!');
+        res_text += "};\n";
     }
     pointer++;
 }

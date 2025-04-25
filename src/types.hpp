@@ -12,7 +12,9 @@ typedef unsigned int    u32;
 #define lastel(X) X[X.size()-1]
 
 std::map<std::string, std::string> types = {
-    {"0",  "void"},
+    {"0",  ""},
+    {"1",  "void"},
+    {"2",  "std::string"},
     {"7",  "char"},
     {"15", "short"},
     {"31", "int"},
@@ -22,7 +24,7 @@ std::map<std::string, std::string> types = {
 };
 
 std::map<std::string, std::pair<std::string, std::string>> macroses = {
-    {"m", std::pair<std::string, std::string>("int main(int c, char **v)\n{\n", "}\n")},
+    {"m", std::pair<std::string, std::string>("int main(int argc, char **argv)\n{\n", "}\n")},
     {"I", std::pair<std::string, std::string>("#include <", ">\n")},
     {"r", std::pair<std::string, std::string>("return ", ";\n")},
     {"p", std::pair<std::string, std::string>("printf_s(", ");\n")},
@@ -106,4 +108,36 @@ void err(std::string msg, analis_info errc_info, analis_info ref_info, std::stri
     std::cout << "" << cmd_txt_col_reset << std::endl;
 
     exit(1);
+}
+
+std::string toc(std::string str, char C)
+{
+    std::string res = "";
+    int i = str.size();
+    while (str[i] != C) {i--;}
+    for (int j = 0; j < i; j++) {
+        res += str[j];
+    }
+    return res;
+}
+
+std::string slise(std::string str, int start, int end)
+{
+    std::string res;
+
+    if (end == -1) end = str.size();
+    for (int i = start; i < end; i++) {
+        res += str[i];
+    } 
+    return res;
+}
+
+std::string get_file_path(std::string path)
+{
+    int i = path.size()-1;
+    while (path[i] != '/') {
+        if (i == path.size() - 1) return ".";
+        i--;
+    }
+    return slise(path, 0, i+1);
 }

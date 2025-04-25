@@ -3,3 +3,4 @@
 *.c
 test.mc
 test2.mc
+bin/

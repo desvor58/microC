@@ -87,7 +87,9 @@ VARIABLES:
         <type><name>[<size>]<value>;
 
         types:
-            0  - void
+            0  - 
+            1  - void
+            2  - std::string
             7  - char
             8  - unsigned char
             15 - short
@@ -97,20 +99,20 @@ VARIABLES:
 
             pointers declaration with '*' simbol after type
             arrays declaration with '[]' after name
-            statics variables declarate with '@' before type
         
         name is a arbitrary alpha simbols and '_' (for exaple: var, a, b, some_var)
 
     Example:
-        8a5;                         char a = 5;
-        32test_var12;                int test_var = 12;
-        32*pointer&test_var;         int* pointer = &test_var;
-        32**dp&pointer;              int** dp = &pointer;
-        8*test_str"Hello, world!";   char* test_str = "Hello, world!";
-        8arr[10];                    char arr[10];
-        8mat[3][3];                  char mat[3][3];
-        16_arr[64]4,1,7;             short _arr[64] = { 4, 1, 7 };
-        8*_p_arr[100];               char* _p_arr[100];
+        7a5;                         char a = 5;
+        31test_var12;                int test_var = 12;
+        31*pointer&test_var;         int* pointer = &test_var;
+        31**dp&pointer;              int** dp = &pointer;
+        7*test_str"Hello, world!";   char* test_str = "Hello, world!";
+        7arr[10];                    char arr[10];
+        7mat[3][3];                  char mat[3][3];
+        15_arr[64]4,1,7;             short _arr[64] = { 4, 1, 7 };
+        7*_p_arr[100];               char* _p_arr[100];
+        $7a5;                        static char a = 5;
 
 FUNCTIONS:
     Semantic:
@@ -131,3 +133,22 @@ DEFINES:
           testDef  /ERROR!/
           testDef; /no error/
         !
+
+MC FILE INCLUDE:
+    file include from path of start file!!!
+
+    Semantic:
+        see macros '~@'
+
+    Example:
+        files:
+            main.mc
+            foo:
+            - foo.mc
+            - bar.mc
+
+        main.mc:
+            ~@foo/foo.mc!
+
+        foo.mc:
+            ~@foo/foo.mc
